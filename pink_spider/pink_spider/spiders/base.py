@@ -11,16 +11,14 @@ class BaseSpider(scrapy.spiders.CrawlSpider):
 
     def start_requests(self):
         url = "https://accounts.pixiv.net/login?lang=zh&source=pc&view_type=page&ref=wwwtop_accounts_index"
-        return [
-            scrapy.Request(url=url, callback=self.get_post_key)
-        ]
+        return [scrapy.Request(url=url, callback=self.get_post_key)]
 
     def get_post_key(self, response):
         post_key = re.search(r'name="post_key" value="(\w+)"', response.text).group(1)
         url = "https://accounts.pixiv.net/login"
         data = {
-            "pixiv_id": os.environ.get('PIXIV_ID', ''),
-            "password": os.environ.get('PIXIV_PASSWORD', ''),
+            "pixiv_id": os.environ.get("PIXIV_ID", ""),
+            "password": os.environ.get("PIXIV_PASSWORD", ""),
             "source": "pc",
             "lang": "ja",
             "return_to": "https://www.pixiv.net/",
@@ -31,7 +29,7 @@ class BaseSpider(scrapy.spiders.CrawlSpider):
         return scrapy.FormRequest(url=url, formdata=data, callback=self.crawl)
 
     def crawl(self, response):
-        if response.url == 'https://accounts.pixiv.net/login':
+        if response.url == "https://accounts.pixiv.net/login":
             raise CloseSpider("Login failed.Please check Pixiv ID and Password.")
         yield scrapy.Request(self.crawl_url, callback=self.parse)
 
