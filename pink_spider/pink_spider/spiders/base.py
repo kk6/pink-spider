@@ -33,10 +33,10 @@ class BaseSpider(scrapy.spiders.CrawlSpider):
             raise CloseSpider("Login failed.Please check Pixiv ID and Password.")
         yield scrapy.Request(self.crawl_url, callback=self.parse)
 
-    def parse(self, response):
-        print(response.text)
-
 
 class FollowingSpider(BaseSpider):
     name = "following"
     crawl_url = "https://www.pixiv.net/bookmark.php?type=user&rest=show"
+
+    def parse(self, response):
+        print(response.text)
