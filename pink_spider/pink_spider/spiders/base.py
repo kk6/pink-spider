@@ -43,25 +43,29 @@ class BaseSpider(CrawlSpider):
 
 class FollowingSpider(BaseSpider):
     name = "following"
-    allowed_domains = ['pixiv.net']
+    allowed_domains = ["pixiv.net"]
     start_urls = ["https://www.pixiv.net/bookmark.php?type=user&rest=show"]
     rules = (
         Rule(LinkExtractor("/member.php\?id=\d+$"), follow=True, callback="parse_page"),
-        Rule(LinkExtractor("/member_illust.php\?mode=medium&illust_id=\d+$"), callback="parse_items"),
+        Rule(
+            LinkExtractor("/member_illust.php\?mode=medium&illust_id=\d+$"),
+            callback="parse_items",
+        ),
+        Rule(LinkExtractor("\?type=user&rest=show&p=\d+$"), follow=True),
     )
 
     def parse_start_url(self, response):
         return self.parse_page(response)
 
     def parse_page(self, response):
-        user_name = response.css('a.user-name::text').extract_first()
+        user_name = response.css("a.user-name::text").extract_first()
         item = FollowingItem(name=user_name)
         logger.info(f"Artist: {user_name}")
         return item
 
     def parse_items(self, response):
-        if response.url != 'https://www.pixiv.net/bookmark.php?type=user&rest=show':
-            title = response.css('title::text').extract_first()
+        if response.url != "https://www.pixiv.net/bookmark.php?type=user&rest=show":
+            title = response.css("title::text").extract_first()
             if not title:
                 title = "No Title"
             m = re.search(r'"createDate":"\d+-\d+-\d+', response.text)
