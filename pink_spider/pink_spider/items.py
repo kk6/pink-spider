@@ -9,4 +9,7 @@ import scrapy
 
 
 class FollowingItem(scrapy.Item):
+    user_id = scrapy.Field()
     name = scrapy.Field()
+    title = scrapy.Field()
+    created_at = scrapy.Field()
