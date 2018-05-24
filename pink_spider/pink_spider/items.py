@@ -8,7 +8,7 @@
 import scrapy
 
 
-class FollowingItem(scrapy.Item):
+class UserItem(scrapy.Item):
     user_id = scrapy.Field()
     name = scrapy.Field()
     title = scrapy.Field()
