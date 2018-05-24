@@ -13,3 +13,11 @@ class UserItem(scrapy.Item):
     name = scrapy.Field()
     title = scrapy.Field()
     created_at = scrapy.Field()
+
+
+class SearchRankingItem(scrapy.Item):
+    word = scrapy.Field()
+    point = scrapy.Field()
+    gender = scrapy.Field()
+    tallying_date = scrapy.Field()
+    is_hot = scrapy.Field()
