@@ -13,14 +13,13 @@ from ..items import UserItem, SearchRankingItem
 logger = logging.getLogger(__name__)
 
 
-class BaseSpider(CrawlSpider):
-    name = "base"
-    crawl_url = ""
-    before_login_url = "https://accounts.pixiv.net/login?lang=zh&source=pc&view_type=page&ref=wwwtop_accounts_index"
+class UserSpider(CrawlSpider):
+    name = "user"
+    pre_login_url = "https://accounts.pixiv.net/login?lang=zh&source=pc&view_type=page&ref=wwwtop_accounts_index"
     login_url = "https://accounts.pixiv.net/login"
 
     def start_requests(self):
-        return [scrapy.Request(url=self.before_login_url, callback=self.login_parse)]
+        return [scrapy.Request(url=self.pre_login_url, callback=self.login_parse)]
 
     def login_parse(self, response):
         post_key = re.search(r'name="post_key" value="(\w+)"', response.text).group(1)
@@ -45,7 +44,7 @@ class BaseSpider(CrawlSpider):
             yield scrapy.Request(url)
 
 
-class FollowingSpider(BaseSpider):
+class FollowingSpider(UserSpider):
     name = "following"
     allowed_domains = ["pixiv.net"]
     start_urls = ["https://www.pixiv.net/bookmark.php?type=user&rest=show"]
